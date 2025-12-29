@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b0f1a" />
+  <meta name="description" content="ヴァンパイア全知全能 — estamos em manutenção para melhorar sua experiência. Voltamos já." />
+  <title>Manutenção • ヴァンパイア全知全能</title>
+
+  <style>
+    :root{
+      --bg0:#060812;
+      --bg1:#0b0f1a;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.10);
+      --txt: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --muted2: rgba(255,255,255,.52);
+      --line: rgba(255,255,255,.12);
+      --ok:#38f6a5;
+      --warn:#ffd36e;
+      --accent:#9b7bff;
+      --accent2:#ff4fd8;
+      --shadow: 0 18px 70px rgba(0,0,0,.55);
+      --radius: 22px;
+    }
+
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      color:var(--txt);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 20% 15%, rgba(155,123,255,.18), transparent 60%),
+                  radial-gradient(900px 700px at 78% 30%, rgba(255,79,216,.16), transparent 55%),
+                  radial-gradient(1200px 900px at 55% 85%, rgba(56,246,165,.10), transparent 60%),
+                  linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
+    }
+
+    /* subtle animated noise + aurora */
+    .fx, .fx::before, .fx::after{
+      position:fixed; inset:0; pointer-events:none; z-index:-1;
+    }
+    .fx::before{
+      content:"";
+      background:
+        radial-gradient(900px 600px at 10% 10%, rgba(155,123,255,.22), transparent 60%),
+        radial-gradient(800px 600px at 85% 20%, rgba(255,79,216,.18), transparent 60%),
+        radial-gradient(900px 650px at 55% 95%, rgba(56,246,165,.12), transparent 65%);
+      filter: blur(14px);
+      opacity:.95;
+      transform: translate3d(0,0,0);
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+    .fx::after{
+      content:"";
+      opacity:.10;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+    }
+    @keyframes drift{
+      from{ transform: translate(-1.5%, -1%) scale(1.02); }
+      to  { transform: translate(1.5%,  1%) scale(1.05); }
+    }
+
+    main{
+      min-height:100%;
+      display:grid;
+      place-items:center;
+      padding: 34px 18px;
+    }
+
+    .wrap{
+      width:min(980px, 100%);
+      display:grid;
+      gap: 18px;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+      padding: 10px 6px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .logo{
+      width:46px; height:46px;
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.22), transparent 45%),
+        linear-gradient(135deg, rgba(155,123,255,.95), rgba(255,79,216,.85));
+      box-shadow: 0 10px 36px rgba(155,123,255,.18), 0 10px 36px rgba(255,79,216,.12);
+      position:relative;
+      overflow:hidden;
+    }
+    .logo::after{
+      content:"";
+      position:absolute; inset:-30%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+      transform: rotate(18deg);
+      animation: shine 3.6s ease-in-out infinite;
+    }
+    @keyframes shine{
+      0%{ transform: translateX(-60%) rotate(18deg); opacity:.0; }
+      25%{ opacity:.55; }
+      55%{ opacity:.30; }
+      100%{ transform: translateX(60%) rotate(18deg); opacity:0; }
+    }
+
+    .brand h1{
+      margin:0;
+      font-size: clamp(18px, 2.4vw, 24px);
+      letter-spacing: .2px;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .brand small{
+      display:block;
+      color: var(--muted2);
+      margin-top: 2px;
+      font-size: 12px;
+      letter-spacing: .2px;
+    }
+
+    .top-right{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 14px 50px rgba(0,0,0,.22);
+      font-size: 13px;
+      color: var(--muted);
+      user-select:none;
+    }
+    .dot{
+      width:9px; height:9px;
+      border-radius:50%;
+      background: var(--warn);
+      box-shadow: 0 0 0 6px rgba(255,211,110,.14);
+      animation: pulse 1.9s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{ transform: scale(1); opacity: .9; }
+      50%{ transform: scale(1.25); opacity: .65; }
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .hero{
+      padding: clamp(22px, 4vw, 34px);
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 22px;
+    }
+
+    @media (max-width: 860px){
+      .hero{ grid-template-columns: 1fr; }
+    }
+
+    .title{
+      margin:0;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.05;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle{
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .jp{
+      margin-top: 10px;
+      color: var(--muted2);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .statusBox{
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.10);
+      display:grid;
+      gap: 14px;
+      align-content:start;
+    }
+
+    .statusRow{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+    }
+
+    .label{
+      color: var(--muted2);
+      font-size: 12px;
+      letter-spacing: .2px;
+      text-transform: uppercase;
+    }
+
+    .value{
+      font-size: 14px;
+      color: var(--txt);
+      margin-top: 4px;
+    }
+
+    .bar{
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+    .bar > i{
+      display:block;
+      height:100%;
+      width: 62%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(155,123,255,.95), rgba(255,79,216,.85), rgba(56,246,165,.80));
+      filter: saturate(1.05);
+      animation: load 2.8s ease-in-out infinite alternate;
+    }
+    @keyframes load{
+      from{ width: 38%; }
+      to  { width: 72%; }
+    }
+
+    .actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    a.btn, button.btn{
+      appearance:none;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--txt);
+      padding: 11px 14px;
+      border-radius: 14px;
+      text-decoration:none;
+      font-weight: 600;
+      font-size: 14px;
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      cursor:pointer;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      backdrop-filter: blur(10px);
+    }
+    a.btn:hover, button.btn:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.09);
+      border-color: rgba(255,255,255,.22);
+    }
+    a.btn.primary{
+      background: linear-gradient(135deg, rgba(155,123,255,.92), rgba(255,79,216,.80));
+      border-color: rgba(255,255,255,.18);
+      box-shadow: 0 18px 60px rgba(155,123,255,.18);
+    }
+    a.btn.primary:hover{
+      background: linear-gradient(135deg, rgba(155,123,255,.98), rgba(255,79,216,.86));
+    }
+
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      padding: 0 0 18px;
+      margin-top: 12px;
+    }
+    @media (max-width: 860px){
+      .grid2{ grid-template-columns: 1fr; }
+    }
+
+    .mini{
+      padding: 18px;
+      border-top: 1px solid var(--line);
+      display:grid;
+      gap: 8px;
+    }
+
+    .mini h3{
+      margin:0;
+      font-size: 14px;
+      letter-spacing:.2px;
+    }
+    .mini p{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .footer{
+      padding: 14px 6px 0;
+      color: var(--muted2);
+      font-size: 12px;
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 2px 7px;
+      border-radius: 999px;
+      color: rgba(255,255,255,.78);
+    }
+
+    /* accessible focus */
+    a:focus-visible, button:focus-visible, input:focus-visible{
+      outline: 3px solid rgba(155,123,255,.55);
+      outline-offset: 3px;
+    }
+
+    /* optional email box */
+    .notify{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .notify input{
+      flex: 1 1 240px;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: var(--txt);
+      font-size: 14px;
+    }
+    .toast{
+      margin-top: 10px;
+      display:none;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(56,246,165,.30);
+      background: rgba(56,246,165,.08);
+      color: rgba(255,255,255,.86);
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="fx" aria-hidden="true"></div>
+
+  <main>
+    <div class="wrap">
+
+      <header>
+        <div class="brand" aria-label="Marca do site">
+          <div class="logo" aria-hidden="true"></div>
+          <div style="min-width:0">
+            <h1>ヴァンパイア全知全能</h1>
+            <small>Maintenance / メンテナンス</small>
+          </div>
+        </div>
+
+        <div class="top-right">
+          <div class="pill" title="Status">
+            <span class="dot" aria-hidden="true"></span>
+            <span>Em manutenção</span>
+          </div>
+          <div class="pill" title="Horário">
+            <span aria-hidden="true">🕒</span>
+            <span id="clock">--:--</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="card">
+        <div class="hero">
+          <div>
+            <h2 class="title">Estamos melhorando tudo por aqui.</h2>
+            <p class="subtitle">
+              O site <strong>ヴァンパイア全知全能</strong> está passando por uma manutenção rápida para entregar uma experiência
+              mais estável, rápida e segura. Você não perdeu nada — é só um pit stop técnico.
+            </p>
+            <p class="jp">
+              ただいまメンテナンス中です。より速く、より安全に戻ってきます。しばらくお待ちください。
+            </p>
+
+            <div class="actions" role="group" aria-label="Ações">
+              <!-- TROQUE A URL DO REPO AQUI -->
+              <a class="btn primary" href="https://github.com/SEU_USUARIO/SEU_REPO" target="_blank" rel="noreferrer">
+                <span aria-hidden="true">↗</span> Ver no GitHub
+              </a>
+
+              <!-- TROQUE O EMAIL AQUI -->
+              <a class="btn" href="mailto:contato@seudominio.com?subject=Manuten%C3%A7%C3%A3o%20-%20Vampire%20Site">
+                <span aria-hidden="true">✉</span> Falar com a equipe
+              </a>
+
+              <button class="btn" type="button" id="copyStatus">
+                <span aria-hidden="true">⧉</span> Copiar status
+              </button>
+            </div>
+
+            <div class="grid2">
+              <div class="mini">
+                <h3>O que está acontecendo</h3>
+                <p id="tip">Ajustes finos de performance, deploy e verificação de integridade.</p>
+              </div>
+              <div class="mini">
+                <h3>Volta prevista</h3>
+                <p>
+                  Assim que concluirmos os testes finais. (Dica: atualize com <span class="kbd">Ctrl</span> + <span class="kbd">F5</span>)
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <aside class="statusBox" aria-label="Painel de status">
+            <div class="statusRow">
+              <div>
+                <div class="label">Progresso estimado</div>
+                <div class="value">Deploy + validação</div>
+              </div>
+              <div class="pill" style="margin-left:auto">
+                <span aria-hidden="true">⚙️</span>
+                <span id="phase">Aplicando updates</span>
+              </div>
+            </div>
+
+            <div class="bar" aria-label="Barra de progresso (ilustrativa)">
+              <i aria-hidden="true"></i>
+            </div>
+
+            <div class="statusRow">
+              <div>
+                <div class="label">Última atualização</div>
+                <div class="value" id="updated">agora mesmo</div>
+              </div>
+              <div style="text-align:right">
+                <div class="label">Região</div>
+                <div class="value">Global</div>
+              </div>
+            </div>
+
+            <div style="border-top:1px solid rgba(255,255,255,.10); padding-top: 12px;">
+              <div class="label">Notificar quando voltar</div>
+
+              <div class="notify" role="group" aria-label="Notificação por e-mail (simulada)">
+                <input id="email" type="email" autocomplete="email" placeholder="seuemail@exemplo.com" aria-label="Seu e-mail" />
+                <button class="btn" type="button" id="notifyBtn">
+                  <span aria-hidden="true">🔔</span> Me avisar
+                </button>
+              </div>
+
+              <div class="toast" id="toast" role="status" aria-live="polite"></div>
+              <p style="margin:10px 0 0; color: rgba(255,255,255,.50); font-size: 12px;">
+                *Este formulário é visual (sem backend). Conecte a uma API quando quiser.
+              </p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <div class="footer">
+        <div>© <span id="year"></span> ヴァンパイア全知全能 • Modo manutenção</div>
+        <div>Se precisar, acompanhe o repositório no GitHub para updates.</div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // ====== CONFIG (edite aqui se quiser) ======
+    const REPO_URL = "https://github.com/SEU_USUARIO/SEU_REPO"; // mesmo link do botão
+    const CONTACT_EMAIL = "contato@seudominio.com";
+
+    // ====== clock ======
+    const clockEl = document.getElementById("clock");
+    const yearEl = document.getElementById("year");
+    const updatedEl = document.getElementById("updated");
+
+    function two(n){ return String(n).padStart(2,"0"); }
+    function tick(){
+      const d = new Date();
+      clockEl.textContent = `${two(d.getHours())}:${two(d.getMinutes())}:${two(d.getSeconds())}`;
+    }
+    tick(); setInterval(tick, 1000);
+    yearEl.textContent = new Date().getFullYear();
+
+    // ====== rotating tips ======
+    const tipEl = document.getElementById("tip");
+    const phaseEl = document.getElementById("phase");
+    const tips = [
+      "Ajustes finos de performance, deploy e verificação de integridade.",
+      "Otimização de assets (CSS/JS) e cache inteligente.",
+      "Revisão de segurança e validação de rotas.",
+      "Refino de UI/UX e correção de bugs chatos.",
+      "Atualização do build e limpeza de dependências."
+    ];
+    const phases = ["Aplicando updates", "Rodando testes", "Validando deploy", "Checando logs", "Finalizando"];
+    let idx = 0;
+
+    setInterval(() => {
+      idx = (idx + 1) % tips.length;
+      tipEl.textContent = tips[idx];
+      phaseEl.textContent = phases[idx % phases.length];
+      updatedEl.textContent = "há poucos segundos";
+    }, 5200);
+
+    // ====== copy status ======
+    document.getElementById("copyStatus").addEventListener("click", async () => {
+      const text =
+`[ヴァンパイア全知全能] Em manutenção.
+Status: Deploy + validação em andamento.
+Repo: ${REPO_URL}
+Contato: ${CONTACT_EMAIL}`;
+      try{
+        await navigator.clipboard.writeText(text);
+        toast("Status copiado ✅");
+      }catch(e){
+        toast("Não consegui copiar automaticamente. Selecione e copie manualmente.");
+      }
+    });
+
+    // ====== fake notify (UI only) ======
+    const toastEl = document.getElementById("toast");
+    const emailEl = document.getElementById("email");
+    document.getElementById("notifyBtn").addEventListener("click", () => {
+      const v = (emailEl.value || "").trim();
+      if(!v || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
+        toast("Digite um e-mail válido 🙂");
+        return;
+      }
+      toast(`Fechado! Se tivesse backend, eu avisaria ${v} quando voltarmos 🔔`);
+      emailEl.value = "";
+    });
+
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.style.display = "block";
+      clearTimeout(toastEl._t);
+      toastEl._t = setTimeout(() => (toastEl.style.display = "none"), 4200);
+    }
+  </script>
+</body>
+</html>
