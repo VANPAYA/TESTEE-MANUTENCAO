@@ -9,132 +9,206 @@
 
   <style>
     :root{
-      --bg0:#060812;
-      --bg1:#0b0f1a;
-      --txt:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.68);
-      --line:rgba(255,255,255,.12);
-      --shadow:0 18px 70px rgba(0,0,0,.55);
-      --r:22px;
+      /* Paleta tradicional (washi / sumi / shuiro) */
+      --washi:#f6f1e6;
+      --washi2:#efe6d6;
+      --sumi:#0d0f12;
+      --sumi2:#161a1f;
+      --shuiro:#b31f2a;     /* vermelho shuiro */
+      --indigo:#1c2b4a;     /* ai (índigo) */
+      --gold:#b79a4a;       /* dourado discreto */
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+      --line: rgba(0,0,0,.12);
+      --r: 22px;
     }
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
       margin:0;
-      color:var(--txt);
-      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:
-        radial-gradient(1200px 800px at 20% 15%, rgba(155,123,255,.18), transparent 60%),
-        radial-gradient(900px 700px at 78% 30%, rgba(255,79,216,.16), transparent 55%),
-        radial-gradient(1200px 900px at 55% 85%, rgba(56,246,165,.10), transparent 60%),
-        linear-gradient(180deg,var(--bg0),var(--bg1));
+      color: var(--sumi);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       overflow:hidden;
+      background:
+        radial-gradient(900px 600px at 20% 18%, rgba(179,31,42,.12), transparent 60%),
+        radial-gradient(850px 650px at 82% 28%, rgba(28,43,74,.12), transparent 60%),
+        linear-gradient(180deg, var(--washi), var(--washi2));
     }
 
-    /* Camadas de efeitos (otimizadas) */
+    /* textura washi (bem leve) + troca de tom a cada 4s */
     .fx, .fx::before, .fx::after{
-      position:fixed; inset:0; pointer-events:none; z-index:-2;
-      transform:translateZ(0);
+      position:fixed; inset:0; pointer-events:none; z-index:-3;
+      transform: translateZ(0);
     }
-    /* “Aurora” leve com troca de cor a cada 4s via hue-rotate */
     .fx::before{
       content:"";
       background:
-        radial-gradient(900px 600px at 10% 10%, rgba(155,123,255,.22), transparent 60%),
-        radial-gradient(800px 600px at 85% 20%, rgba(255,79,216,.18), transparent 60%),
-        radial-gradient(900px 650px at 55% 95%, rgba(56,246,165,.12), transparent 65%);
-      filter:blur(14px) hue-rotate(0deg);
+        radial-gradient(1000px 700px at 35% 10%, rgba(179,31,42,.14), transparent 60%),
+        radial-gradient(900px 650px at 75% 40%, rgba(28,43,74,.14), transparent 60%),
+        radial-gradient(900px 650px at 50% 95%, rgba(183,154,74,.10), transparent 65%);
+      filter: blur(12px) hue-rotate(0deg);
       opacity:.95;
       animation: hue 4s linear infinite;
       will-change: filter;
     }
     @keyframes hue{
-      0%{ filter: blur(14px) hue-rotate(0deg); }
-      100%{ filter: blur(14px) hue-rotate(90deg); }
+      0%{ filter: blur(12px) hue-rotate(0deg); }
+      100%{ filter: blur(12px) hue-rotate(70deg); }
     }
-    /* noise sutil (bem leve) */
     .fx::after{
       content:"";
-      opacity:.10;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
-      mix-blend-mode:overlay;
+      opacity:.20; /* mais “visível” mas ainda suave */
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+      mix-blend-mode:multiply;
     }
 
-    /* Fundo com Kanji/Katakana/Hiragana “em todo o site” */
+    /* padrão “seigaiha” (ondas) sutil por cima do washi */
+    .pattern{
+      position:fixed; inset:0; pointer-events:none; z-index:-2;
+      opacity:.18;
+      background-image:
+        radial-gradient(circle at 10px 10px, rgba(13,15,18,.18) 2px, transparent 3px),
+        radial-gradient(circle at 40px 40px, rgba(13,15,18,.10) 2px, transparent 3px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(closest-side at 50% 40%, black 0%, transparent 72%);
+      transform: translateZ(0);
+    }
+
+    /* “nuvens” tradicionais (kumo) leves */
+    .kumo{
+      position:fixed; inset:-10% -10%;
+      z-index:-1; pointer-events:none;
+      opacity:.35;
+      background:
+        radial-gradient(200px 90px at 15% 30%, rgba(13,15,18,.10), transparent 70%),
+        radial-gradient(240px 110px at 25% 35%, rgba(13,15,18,.08), transparent 70%),
+        radial-gradient(220px 95px at 70% 25%, rgba(13,15,18,.10), transparent 70%),
+        radial-gradient(260px 120px at 80% 30%, rgba(13,15,18,.08), transparent 70%),
+        radial-gradient(220px 95px at 55% 78%, rgba(13,15,18,.09), transparent 70%),
+        radial-gradient(280px 130px at 63% 82%, rgba(13,15,18,.07), transparent 70%);
+      filter: blur(2px);
+      transform: translateZ(0);
+    }
+
+    /* Fundo com Kanji/Katakana/Hiragana (MAIS visível) */
     .glyphs{
       position:fixed; inset:0; pointer-events:none; z-index:-1;
       overflow:hidden;
-      opacity:.22;
+      opacity:.58; /* MAIS visível */
       transform:translateZ(0);
+      mix-blend-mode:multiply;
     }
+
     .glyph{
       position:absolute;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      color:rgba(255,255,255,.70);
-      text-shadow:0 0 18px rgba(255,255,255,.08);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      color: rgba(13,15,18,.78);
+      text-shadow:
+        0 1px 0 rgba(246,241,230,.55),
+        0 10px 30px rgba(0,0,0,.10);
       will-change: transform, opacity;
       transform:translate3d(0,0,0);
       animation:
-        float var(--t,16s) linear infinite,
-        spin  var(--s,10s) linear infinite,
-        fade  var(--f,8s) ease-in-out infinite;
+        float var(--t,18s) linear infinite,
+        spin  var(--s,14s) linear infinite,
+        fade  var(--f,9s) ease-in-out infinite;
       user-select:none;
       white-space:nowrap;
-      filter: drop-shadow(0 10px 30px rgba(0,0,0,.25));
+      letter-spacing: .5px;
+      filter: drop-shadow(0 18px 28px rgba(0,0,0,.10));
     }
     @keyframes float{
-      0%{ transform: translate3d(var(--x,0px), 110vh, 0) rotate(0deg); }
-      100%{ transform: translate3d(var(--x,0px), -20vh, 0) rotate(0deg); }
+      0%{ transform: translate3d(var(--x,0px), 112vh, 0) rotate(0deg); }
+      100%{ transform: translate3d(var(--x,0px), -24vh, 0) rotate(0deg); }
     }
     @keyframes spin{
       0%{ rotate:0deg; }
       100%{ rotate:360deg; }
     }
     @keyframes fade{
-      0%,100%{ opacity:.14; }
-      50%{ opacity:.28; }
+      0%,100%{ opacity:.38; }
+      50%{ opacity:.72; }
     }
 
     main{
       min-height:100%;
       display:grid;
       place-items:center;
-      padding:32px 16px;
+      padding: 34px 16px;
     }
 
     .card{
       width:min(820px, 100%);
       border-radius:var(--r);
       border:1px solid var(--line);
-      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(12px);
+      background:
+        linear-gradient(180deg, rgba(246,241,230,.86), rgba(239,230,214,.78));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
       padding: clamp(22px, 4vw, 34px);
+      position:relative;
+      overflow:hidden;
+    }
+
+    /* detalhe tradicional: faixa vermelha + “carimbo” */
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg, rgba(179,31,42,.18), transparent 28%),
+        linear-gradient(180deg, transparent, rgba(0,0,0,.02));
+      pointer-events:none;
+    }
+    .seal{
+      position:absolute;
+      right: 18px;
+      top: 18px;
+      width: 74px; height: 74px;
+      border-radius: 14px;
+      border: 1px solid rgba(179,31,42,.40);
+      background:
+        linear-gradient(135deg, rgba(179,31,42,.92), rgba(179,31,42,.75));
+      box-shadow: 0 14px 35px rgba(179,31,42,.18);
+      display:grid;
+      place-items:center;
+      color: rgba(246,241,230,.92);
+      font-weight: 800;
+      letter-spacing: 2px;
+      transform: rotate(-10deg);
+      user-select:none;
+    }
+    .seal span{
+      font-size: 18px;
+      line-height: 1;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
     }
 
     .brand{
       display:flex; align-items:center; gap:12px;
       margin-bottom: 18px;
       min-width:0;
+      position:relative;
+      z-index:1;
     }
     .logo{
       width:46px; height:46px;
       border-radius:16px;
       background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,.22), transparent 45%),
-        linear-gradient(135deg, rgba(155,123,255,.95), rgba(255,79,216,.85));
-      box-shadow:0 10px 36px rgba(155,123,255,.18), 0 10px 36px rgba(255,79,216,.12);
+        radial-gradient(circle at 30% 30%, rgba(246,241,230,.35), transparent 45%),
+        linear-gradient(135deg, rgba(28,43,74,.92), rgba(179,31,42,.78));
+      box-shadow: 0 10px 30px rgba(28,43,74,.16), 0 10px 30px rgba(179,31,42,.10);
       position:relative;
       overflow:hidden;
       flex:0 0 auto;
+      border: 1px solid rgba(0,0,0,.08);
     }
     .logo::after{
       content:"";
       position:absolute; inset:-30%;
-      background:linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+      background:linear-gradient(90deg, transparent, rgba(246,241,230,.28), transparent);
       transform: rotate(18deg);
-      animation: shine 3.6s ease-in-out infinite;
+      animation: shine 3.8s ease-in-out infinite;
     }
     @keyframes shine{
       0%{ transform: translateX(-60%) rotate(18deg); opacity:0; }
@@ -149,34 +223,39 @@
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
+      letter-spacing:.3px;
     }
     .sub{
-      color:var(--muted);
-      font-size:13px;
-      margin-top:3px;
-      letter-spacing:.2px;
+      color: rgba(13,15,18,.62);
+      font-size: 13px;
+      margin-top: 3px;
+      letter-spacing: .6px;
     }
 
     h2{
       margin:0;
       font-size: clamp(30px, 4.2vw, 48px);
-      line-height:1.05;
-      letter-spacing:-.5px;
+      line-height: 1.05;
+      letter-spacing: -0.6px;
+      position:relative;
+      z-index:1;
     }
     p{
       margin:12px 0 0;
-      color:var(--muted);
-      font-size:15px;
-      line-height:1.6;
-      max-width: 56ch;
+      color: rgba(13,15,18,.72);
+      font-size: 15px;
+      line-height: 1.65;
+      max-width: 60ch;
+      position:relative;
+      z-index:1;
     }
     .jp{
-      margin-top:10px;
-      color:rgba(255,255,255,.55);
-      font-size:14px;
+      margin-top: 10px;
+      color: rgba(13,15,18,.56);
+      font-size: 14px;
     }
 
-    /* Acessibilidade e performance */
+    /* Acessibilidade / performance */
     @media (prefers-reduced-motion: reduce){
       .fx::before, .glyph{ animation:none !important; }
     }
@@ -185,29 +264,30 @@
 
 <body>
   <div class="fx" aria-hidden="true"></div>
+  <div class="pattern" aria-hidden="true"></div>
+  <div class="kumo" aria-hidden="true"></div>
 
-  <!-- Fundo “cheio” de caracteres: Kanji + Katakana + Hiragana -->
+  <!-- Fundo mais “presente” -->
   <div class="glyphs" aria-hidden="true">
-    <!-- Dica: não exagerei na quantidade pra manter leve/otimizado -->
-    <span class="glyph" style="--x: 6vw;  top:-10vh; font-size:22px; --t:18s; --s:12s; --f:9s;">漢 影 夜 夢</span>
-    <span class="glyph" style="--x: 18vw; top:-30vh; font-size:18px; --t:16s; --s:10s; --f:8s;">あ さ ひ ら が な</span>
-    <span class="glyph" style="--x: 30vw; top:-20vh; font-size:24px; --t:20s; --s:14s; --f:10s;">ヴァ ン パ イ ア</span>
-    <span class="glyph" style="--x: 42vw; top:-35vh; font-size:16px; --t:15s; --s:9s;  --f:7s;">全 知 全 能</span>
-    <span class="glyph" style="--x: 54vw; top:-15vh; font-size:20px; --t:19s; --s:11s; --f:9s;">カ タ カ ナ</span>
-    <span class="glyph" style="--x: 66vw; top:-28vh; font-size:26px; --t:22s; --s:13s; --f:11s;">月 血 闇</span>
-    <span class="glyph" style="--x: 78vw; top:-18vh; font-size:19px; --t:17s; --s:10s; --f:8s;">ひ ら が な</span>
-    <span class="glyph" style="--x: 90vw; top:-32vh; font-size:23px; --t:21s; --s:12s; --f:10s;">ナ イ ト</span>
+    <!-- Maior densidade, mas ainda otimizado (poucos elementos, strings longas) -->
+    <span class="glyph" style="--x: 6vw;  top:-12vh; font-size:30px; --t:22s; --s:16s; --f:10s;">漢 影 夜 夢 血 闇 月</span>
+    <span class="glyph" style="--x: 18vw; top:-40vh; font-size:22px; --t:19s; --s:14s; --f:9s;">あ か さ た な は ま や ら わ</span>
+    <span class="glyph" style="--x: 30vw; top:-26vh; font-size:34px; --t:24s; --s:18s; --f:11s;">ヴァ ン パ イ ア 全 知 全 能</span>
+    <span class="glyph" style="--x: 42vw; top:-50vh; font-size:20px; --t:17s; --s:13s; --f:8s;">山 川 風 花 鳥 雲</span>
+    <span class="glyph" style="--x: 54vw; top:-22vh; font-size:26px; --t:21s; --s:15s; --f:10s;">カ タ カ ナ ミ ス ト ナ イ ト</span>
+    <span class="glyph" style="--x: 66vw; top:-44vh; font-size:36px; --t:26s; --s:20s; --f:12s;">墨 朱 金 影</span>
+    <span class="glyph" style="--x: 78vw; top:-28vh; font-size:24px; --t:20s; --s:14s; --f:9s;">ひ ら が な い ろ は に ほ へ と</span>
+    <span class="glyph" style="--x: 90vw; top:-52vh; font-size:32px; --t:25s; --s:18s; --f:11s;">夜 明 け 闇 の 中</span>
 
-    <span class="glyph" style="--x: 10vw; top:-55vh; font-size:14px; --t:14s; --s:8s;  --f:7s;">影 風</span>
-    <span class="glyph" style="--x: 24vw; top:-60vh; font-size:17px; --t:16s; --s:9s;  --f:8s;">さ よ う な ら</span>
-    <span class="glyph" style="--x: 38vw; top:-52vh; font-size:15px; --t:15s; --s:9s;  --f:7s;">ミ ス ト</span>
-    <span class="glyph" style="--x: 52vw; top:-66vh; font-size:18px; --t:17s; --s:10s; --f:8s;">黒 白 赤</span>
-    <span class="glyph" style="--x: 70vw; top:-58vh; font-size:14px; --t:14s; --s:8s;  --f:7s;">あ い う え お</span>
-    <span class="glyph" style="--x: 84vw; top:-62vh; font-size:16px; --t:16s; --s:9s;  --f:8s;">テ ス ト</span>
+    <span class="glyph" style="--x: 12vw; top:-72vh; font-size:18px; --t:16s; --s:12s; --f:8s;">影 風 霧</span>
+    <span class="glyph" style="--x: 36vw; top:-78vh; font-size:19px; --t:17s; --s:12s; --f:8s;">さ よ う な ら</span>
+    <span class="glyph" style="--x: 64vw; top:-76vh; font-size:18px; --t:16s; --s:12s; --f:8s;">テ ス ト</span>
   </div>
 
   <main>
     <section class="card" role="region" aria-label="Página de manutenção">
+      <div class="seal" aria-hidden="true"><span>保守</span></div>
+
       <div class="brand">
         <div class="logo" aria-hidden="true"></div>
         <div style="min-width:0">
@@ -217,7 +297,7 @@
       </div>
 
       <h2>Voltamos já.</h2>
-      <p>O site está em manutenção para ajustes de estabilidade e performance.</p>
+      <p>Estamos em manutenção. Obrigado pela paciência.</p>
       <p class="jp">ただいまメンテナンス中です。しばらくお待ちください。</p>
     </section>
   </main>
