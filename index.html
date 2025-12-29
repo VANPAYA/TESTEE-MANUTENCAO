@@ -11,316 +11,174 @@
     :root{
       --bg0:#060812;
       --bg1:#0b0f1a;
-      --txt: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.68);
-      --muted2: rgba(255,255,255,.52);
-      --line: rgba(255,255,255,.12);
-      --warn:#ffd36e;
-      --accent:#9b7bff;
-      --accent2:#ff4fd8;
-      --shadow: 0 18px 70px rgba(0,0,0,.55);
-      --radius: 22px;
+      --txt:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.68);
+      --line:rgba(255,255,255,.12);
+      --shadow:0 18px 70px rgba(0,0,0,.55);
+      --r:22px;
     }
 
-    *{ box-sizing: border-box; }
-    html,body{ height:100%; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
       color:var(--txt);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background: radial-gradient(1200px 800px at 20% 15%, rgba(155,123,255,.18), transparent 60%),
-                  radial-gradient(900px 700px at 78% 30%, rgba(255,79,216,.16), transparent 55%),
-                  radial-gradient(1200px 900px at 55% 85%, rgba(255,211,110,.10), transparent 60%),
-                  linear-gradient(180deg, var(--bg0), var(--bg1));
-      overflow-x:hidden;
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background:
+        radial-gradient(1200px 800px at 20% 15%, rgba(155,123,255,.18), transparent 60%),
+        radial-gradient(900px 700px at 78% 30%, rgba(255,79,216,.16), transparent 55%),
+        radial-gradient(1200px 900px at 55% 85%, rgba(56,246,165,.10), transparent 60%),
+        linear-gradient(180deg,var(--bg0),var(--bg1));
+      overflow:hidden;
     }
 
-    /* subtle animated aurora + noise */
+    /* Camadas de efeitos (otimizadas) */
     .fx, .fx::before, .fx::after{
-      position:fixed; inset:0; pointer-events:none; z-index:-1;
+      position:fixed; inset:0; pointer-events:none; z-index:-2;
+      transform:translateZ(0);
     }
+    /* “Aurora” leve com troca de cor a cada 4s via hue-rotate */
     .fx::before{
       content:"";
       background:
         radial-gradient(900px 600px at 10% 10%, rgba(155,123,255,.22), transparent 60%),
         radial-gradient(800px 600px at 85% 20%, rgba(255,79,216,.18), transparent 60%),
-        radial-gradient(900px 650px at 55% 95%, rgba(255,211,110,.12), transparent 65%);
-      filter: blur(14px);
+        radial-gradient(900px 650px at 55% 95%, rgba(56,246,165,.12), transparent 65%);
+      filter:blur(14px) hue-rotate(0deg);
       opacity:.95;
-      transform: translate3d(0,0,0);
-      animation: drift 18s ease-in-out infinite alternate;
+      animation: hue 4s linear infinite;
+      will-change: filter;
     }
+    @keyframes hue{
+      0%{ filter: blur(14px) hue-rotate(0deg); }
+      100%{ filter: blur(14px) hue-rotate(90deg); }
+    }
+    /* noise sutil (bem leve) */
     .fx::after{
       content:"";
       opacity:.10;
-      background-image:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
-      mix-blend-mode: overlay;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+      mix-blend-mode:overlay;
     }
-    @keyframes drift{
-      from{ transform: translate(-1.5%, -1%) scale(1.02); }
-      to  { transform: translate(1.5%,  1%) scale(1.05); }
+
+    /* Fundo com Kanji/Katakana/Hiragana “em todo o site” */
+    .glyphs{
+      position:fixed; inset:0; pointer-events:none; z-index:-1;
+      overflow:hidden;
+      opacity:.22;
+      transform:translateZ(0);
+    }
+    .glyph{
+      position:absolute;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      color:rgba(255,255,255,.70);
+      text-shadow:0 0 18px rgba(255,255,255,.08);
+      will-change: transform, opacity;
+      transform:translate3d(0,0,0);
+      animation:
+        float var(--t,16s) linear infinite,
+        spin  var(--s,10s) linear infinite,
+        fade  var(--f,8s) ease-in-out infinite;
+      user-select:none;
+      white-space:nowrap;
+      filter: drop-shadow(0 10px 30px rgba(0,0,0,.25));
+    }
+    @keyframes float{
+      0%{ transform: translate3d(var(--x,0px), 110vh, 0) rotate(0deg); }
+      100%{ transform: translate3d(var(--x,0px), -20vh, 0) rotate(0deg); }
+    }
+    @keyframes spin{
+      0%{ rotate:0deg; }
+      100%{ rotate:360deg; }
+    }
+    @keyframes fade{
+      0%,100%{ opacity:.14; }
+      50%{ opacity:.28; }
     }
 
     main{
       min-height:100%;
       display:grid;
       place-items:center;
-      padding: 34px 18px;
+      padding:32px 16px;
     }
 
-    .wrap{
-      width:min(980px, 100%);
-      display:grid;
-      gap: 18px;
-    }
-
-    header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 14px;
-      padding: 10px 6px;
+    .card{
+      width:min(820px, 100%);
+      border-radius:var(--r);
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(12px);
+      padding: clamp(22px, 4vw, 34px);
     }
 
     .brand{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      min-width: 0;
+      display:flex; align-items:center; gap:12px;
+      margin-bottom: 18px;
+      min-width:0;
     }
-
     .logo{
       width:46px; height:46px;
-      border-radius: 16px;
+      border-radius:16px;
       background:
         radial-gradient(circle at 30% 30%, rgba(255,255,255,.22), transparent 45%),
         linear-gradient(135deg, rgba(155,123,255,.95), rgba(255,79,216,.85));
-      box-shadow: 0 10px 36px rgba(155,123,255,.18), 0 10px 36px rgba(255,79,216,.12);
+      box-shadow:0 10px 36px rgba(155,123,255,.18), 0 10px 36px rgba(255,79,216,.12);
       position:relative;
       overflow:hidden;
+      flex:0 0 auto;
     }
     .logo::after{
       content:"";
       position:absolute; inset:-30%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
       transform: rotate(18deg);
       animation: shine 3.6s ease-in-out infinite;
     }
     @keyframes shine{
-      0%{ transform: translateX(-60%) rotate(18deg); opacity:.0; }
+      0%{ transform: translateX(-60%) rotate(18deg); opacity:0; }
       25%{ opacity:.55; }
-      55%{ opacity:.30; }
       100%{ transform: translateX(60%) rotate(18deg); opacity:0; }
     }
 
-    .brand h1{
+    h1{
       margin:0;
-      font-size: clamp(18px, 2.4vw, 24px);
-      letter-spacing: .2px;
-      line-height: 1.1;
-      white-space: nowrap;
+      font-size: clamp(18px, 2.6vw, 24px);
+      line-height:1.1;
+      white-space:nowrap;
       overflow:hidden;
-      text-overflow: ellipsis;
+      text-overflow:ellipsis;
     }
-    .brand small{
-      display:block;
-      color: var(--muted2);
-      margin-top: 2px;
-      font-size: 12px;
-      letter-spacing: .2px;
-    }
-
-    .top-right{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid var(--line);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 14px 50px rgba(0,0,0,.22);
-      font-size: 13px;
-      color: var(--muted);
-      user-select:none;
-    }
-    .dot{
-      width:9px; height:9px;
-      border-radius:50%;
-      background: var(--warn);
-      box-shadow: 0 0 0 6px rgba(255,211,110,.14);
-      animation: pulse 1.9s ease-in-out infinite;
-    }
-    @keyframes pulse{
-      0%,100%{ transform: scale(1); opacity: .9; }
-      50%{ transform: scale(1.25); opacity: .65; }
-    }
-
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      position:relative;
-    }
-
-    .hero{
-      padding: clamp(22px, 4vw, 34px);
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 22px;
-    }
-    @media (max-width: 860px){
-      .hero{ grid-template-columns: 1fr; }
-    }
-
-    .title{
-      margin:0;
-      font-size: clamp(28px, 4vw, 44px);
-      line-height: 1.05;
-      letter-spacing: -0.5px;
-    }
-
-    .subtitle{
-      margin: 12px 0 0;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.55;
-    }
-
-    .statusBox{
-      padding: 18px;
-      border-radius: 18px;
-      background: rgba(0,0,0,.18);
-      border: 1px solid rgba(255,255,255,.10);
-      display:grid;
-      gap: 14px;
-      align-content:start;
-    }
-
-    .label{
-      color: var(--muted2);
-      font-size: 12px;
-      letter-spacing: .2px;
-      text-transform: uppercase;
-    }
-
-    .value{
-      font-size: 14px;
-      color: var(--txt);
-      margin-top: 4px;
-    }
-
-    .bar{
-      height: 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.10);
-      overflow:hidden;
-    }
-    .bar > i{
-      display:block;
-      height:100%;
-      width: 62%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(155,123,255,.95), rgba(255,79,216,.85), rgba(255,211,110,.80));
-      filter: saturate(1.05);
-      animation: load 2.8s ease-in-out infinite alternate;
-    }
-    @keyframes load{
-      from{ width: 38%; }
-      to  { width: 72%; }
-    }
-
-    .actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 18px;
-    }
-
-    a.btn{
-      appearance:none;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: var(--txt);
-      padding: 11px 14px;
-      border-radius: 14px;
-      text-decoration:none;
-      font-weight: 600;
-      font-size: 14px;
-      display:inline-flex;
-      align-items:center;
-      gap: 10px;
-      cursor:pointer;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-      backdrop-filter: blur(10px);
-    }
-    a.btn:hover{
-      transform: translateY(-1px);
-      background: rgba(255,255,255,.09);
-      border-color: rgba(255,255,255,.22);
-    }
-    a.btn.primary{
-      background: linear-gradient(135deg, rgba(155,123,255,.92), rgba(255,79,216,.80));
-      border-color: rgba(255,255,255,.18);
-      box-shadow: 0 18px 60px rgba(155,123,255,.18);
-    }
-    a.btn.primary:hover{
-      background: linear-gradient(135deg, rgba(155,123,255,.98), rgba(255,79,216,.86));
-    }
-
-    .mini{
-      padding: 18px;
-      border-top: 1px solid var(--line);
-      display:grid;
-      gap: 8px;
-    }
-    .mini h3{
-      margin:0;
-      font-size: 14px;
+    .sub{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:3px;
       letter-spacing:.2px;
     }
-    .mini p{
+
+    h2{
       margin:0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
+      font-size: clamp(30px, 4.2vw, 48px);
+      line-height:1.05;
+      letter-spacing:-.5px;
+    }
+    p{
+      margin:12px 0 0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.6;
+      max-width: 56ch;
+    }
+    .jp{
+      margin-top:10px;
+      color:rgba(255,255,255,.55);
+      font-size:14px;
     }
 
-    .footer{
-      padding: 14px 6px 0;
-      color: var(--muted2);
-      font-size: 12px;
-      display:flex;
-      justify-content:space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    a.link{
-      color: rgba(255,255,255,.78);
-      text-decoration: none;
-      border-bottom: 1px dashed rgba(255,255,255,.28);
-    }
-    a.link:hover{
-      color: rgba(255,255,255,.92);
-      border-bottom-color: rgba(255,255,255,.45);
-    }
-
-    a:focus-visible{
-      outline: 3px solid rgba(155,123,255,.55);
-      outline-offset: 3px;
+    /* Acessibilidade e performance */
+    @media (prefers-reduced-motion: reduce){
+      .fx::before, .glyph{ animation:none !important; }
     }
   </style>
 </head>
@@ -328,121 +186,40 @@
 <body>
   <div class="fx" aria-hidden="true"></div>
 
+  <!-- Fundo “cheio” de caracteres: Kanji + Katakana + Hiragana -->
+  <div class="glyphs" aria-hidden="true">
+    <!-- Dica: não exagerei na quantidade pra manter leve/otimizado -->
+    <span class="glyph" style="--x: 6vw;  top:-10vh; font-size:22px; --t:18s; --s:12s; --f:9s;">漢 影 夜 夢</span>
+    <span class="glyph" style="--x: 18vw; top:-30vh; font-size:18px; --t:16s; --s:10s; --f:8s;">あ さ ひ ら が な</span>
+    <span class="glyph" style="--x: 30vw; top:-20vh; font-size:24px; --t:20s; --s:14s; --f:10s;">ヴァ ン パ イ ア</span>
+    <span class="glyph" style="--x: 42vw; top:-35vh; font-size:16px; --t:15s; --s:9s;  --f:7s;">全 知 全 能</span>
+    <span class="glyph" style="--x: 54vw; top:-15vh; font-size:20px; --t:19s; --s:11s; --f:9s;">カ タ カ ナ</span>
+    <span class="glyph" style="--x: 66vw; top:-28vh; font-size:26px; --t:22s; --s:13s; --f:11s;">月 血 闇</span>
+    <span class="glyph" style="--x: 78vw; top:-18vh; font-size:19px; --t:17s; --s:10s; --f:8s;">ひ ら が な</span>
+    <span class="glyph" style="--x: 90vw; top:-32vh; font-size:23px; --t:21s; --s:12s; --f:10s;">ナ イ ト</span>
+
+    <span class="glyph" style="--x: 10vw; top:-55vh; font-size:14px; --t:14s; --s:8s;  --f:7s;">影 風</span>
+    <span class="glyph" style="--x: 24vw; top:-60vh; font-size:17px; --t:16s; --s:9s;  --f:8s;">さ よ う な ら</span>
+    <span class="glyph" style="--x: 38vw; top:-52vh; font-size:15px; --t:15s; --s:9s;  --f:7s;">ミ ス ト</span>
+    <span class="glyph" style="--x: 52vw; top:-66vh; font-size:18px; --t:17s; --s:10s; --f:8s;">黒 白 赤</span>
+    <span class="glyph" style="--x: 70vw; top:-58vh; font-size:14px; --t:14s; --s:8s;  --f:7s;">あ い う え お</span>
+    <span class="glyph" style="--x: 84vw; top:-62vh; font-size:16px; --t:16s; --s:9s;  --f:8s;">テ ス ト</span>
+  </div>
+
   <main>
-    <div class="wrap">
-      <header>
-        <div class="brand" aria-label="Marca do site">
-          <div class="logo" aria-hidden="true"></div>
-          <div style="min-width:0">
-            <h1>ヴァンパイア全知全能</h1>
-            <small>Maintenance / メンテナンス</small>
-          </div>
+    <section class="card" role="region" aria-label="Página de manutenção">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div style="min-width:0">
+          <h1>ヴァンパイア全知全能</h1>
+          <div class="sub">メンテナンス中 / Manutenção</div>
         </div>
-
-        <div class="top-right">
-          <div class="pill" title="Status">
-            <span class="dot" aria-hidden="true"></span>
-            <span>Manutenção</span>
-          </div>
-          <div class="pill" title="Horário">
-            <span aria-hidden="true">🕒</span>
-            <span id="clock">--:--</span>
-          </div>
-        </div>
-      </header>
-
-      <section class="card">
-        <div class="hero">
-          <div>
-            <h2 class="title">Voltamos já.</h2>
-            <p class="subtitle">
-              Estamos fazendo ajustes para manter tudo estável e rápido. Obrigado pela paciência.
-            </p>
-
-            <div class="actions" role="group" aria-label="Ações">
-              <!-- TROQUE A URL DO REPO AQUI -->
-              <a class="btn primary" href="https://github.com/SEU_USUARIO/SEU_REPO" target="_blank" rel="noreferrer">
-                <span aria-hidden="true">↗</span> GitHub
-              </a>
-
-              <!-- TROQUE O EMAIL AQUI (ou remova o botão) -->
-              <a class="btn" href="mailto:contato@seudominio.com?subject=Manuten%C3%A7%C3%A3o%20-%20Vampire%20Site">
-                <span aria-hidden="true">✉</span> Contato
-              </a>
-            </div>
-
-            <div class="mini">
-              <h3>Atualizações</h3>
-              <p id="tip">Otimização de performance e deploy.</p>
-            </div>
-          </div>
-
-          <aside class="statusBox" aria-label="Painel de status">
-            <div>
-              <div class="label">Etapa</div>
-              <div class="value" id="phase">Deploy</div>
-            </div>
-
-            <div class="bar" aria-label="Barra de progresso (ilustrativa)">
-              <i aria-hidden="true"></i>
-            </div>
-
-            <div>
-              <div class="label">Última atualização</div>
-              <div class="value" id="updated">agora</div>
-            </div>
-
-            <div style="border-top:1px solid rgba(255,255,255,.10); padding-top: 12px;">
-              <div class="label">Status</div>
-              <div class="value">
-                Acompanhe pelo repositório:
-                <a class="link" href="https://github.com/SEU_USUARIO/SEU_REPO" target="_blank" rel="noreferrer">GitHub</a>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <div class="footer">
-        <div>© <span id="year"></span> ヴァンパイア全知全能</div>
-        <div><span style="opacity:.8">Se necessário, veja updates no</span> <a class="link" href="https://github.com/SEU_USUARIO/SEU_REPO" target="_blank" rel="noreferrer">GitHub</a>.</div>
       </div>
-    </div>
+
+      <h2>Voltamos já.</h2>
+      <p>O site está em manutenção para ajustes de estabilidade e performance.</p>
+      <p class="jp">ただいまメンテナンス中です。しばらくお待ちください。</p>
+    </section>
   </main>
-
-  <script>
-    // edite aqui:
-    const REPO_URL = "https://github.com/SEU_USUARIO/SEU_REPO";
-
-    // clock + year
-    const clockEl = document.getElementById("clock");
-    const yearEl  = document.getElementById("year");
-    const updatedEl = document.getElementById("updated");
-    const tipEl = document.getElementById("tip");
-    const phaseEl = document.getElementById("phase");
-
-    function two(n){ return String(n).padStart(2,"0"); }
-    function tick(){
-      const d = new Date();
-      clockEl.textContent = `${two(d.getHours())}:${two(d.getMinutes())}:${two(d.getSeconds())}`;
-    }
-    tick(); setInterval(tick, 1000);
-    yearEl.textContent = new Date().getFullYear();
-
-    // clean, short rotations (no "IA-ish" text)
-    const tips = ["Otimização de performance e deploy.", "Ajustes de estabilidade.", "Atualização de build e assets."];
-    const phases = ["Deploy", "Testes", "Finalização"];
-    let i = 0;
-
-    setInterval(() => {
-      i = (i + 1) % tips.length;
-      tipEl.textContent = tips[i];
-      phaseEl.textContent = phases[i % phases.length];
-      updatedEl.textContent = "há instantes";
-    }, 6500);
-
-    // keep links consistent
-    document.querySelectorAll('a[href*="github.com/SEU_USUARIO/SEU_REPO"]').forEach(a => a.href = REPO_URL);
-  </script>
 </body>
 </html>
